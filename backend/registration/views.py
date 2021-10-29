@@ -4,10 +4,13 @@ from .models import Course
 from .models import Student
 from rest_framework.filters import SearchFilter
 from .serializers import *
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import viewsets
 from  django.contrib.auth.hashers import make_password, check_password
+from rest_framework.permissions import IsAuthenticated
 
 
 def index(request):
@@ -26,27 +29,31 @@ def class_all(request):
     serializer = CourseSerializer(queryset, many=True)
     return Response(serializer.data)
 
-@api_view(["GET", "POST"])   
-def student_create(request):
-    # hashpassword
-   request.data['password'] = make_password(request.data['password'])
-   serializer = StudentSerializer(data=request.data)
-   
-   serializer.is_valid(raise_exception=True)
-   serializer.save()
-   
-   return Response("ok")
-
-@api_view(["GET", "POST"]) 
-def student_login(req):
-    print(req.data['email'])
-    student = Student.objects.get(email=req.data['email'])
-    serializer = StudentSerializer(student)
-    if check_password(req.data['password'], serializer.data['password']) == True:
-        print(check_password(req.data['password'], serializer.data['password']))
+class StudentViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @api_view(["GET", "POST"])   
+    def student_create(request):
+        # hashpassword
+        print(request.data)
+        serializer = StudentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response("ok")
-     
-    return Response("errr")
+
+    @api_view(["GET", "POST"])  
+    def me(request):
+        student = Student.objects.get(id=request.user.id)
+        
+        serializer = StudentSerializer(student)
+      
+        print(serializer)
+
+        return Response(serializer.data)
+
+
+
+  
     
 
 
