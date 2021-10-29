@@ -6,7 +6,7 @@ import "./style.css"
 
 export default function Create() {
   const [student, setSudent] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -20,13 +20,15 @@ export default function Create() {
   };
   const createStudent = async (event) => {
     event.preventDefault();
-    const { first_name, email, password } = student;
+    const { first_name, username, password } = student;
     try {
-      let response = await axios.post("http://localhost:8000/api/student/login", {
-        email,
+      let response = await axios.post("http://localhost:8000/auth/jwt/create", {
+        username,
         password,
       });
-      console.log(response)
+      localStorage.setItem("Access", response.data.access)
+      localStorage.setItem("Refresh", response.data.refresh)
+      window.location.href = "/dashbord"
     } catch (err) {
       console.log(err.message);
     }
@@ -44,9 +46,9 @@ export default function Create() {
           <Grid className="center-item" item xs={12}>
             <input
               onChange={handleChange}
-              placeholder="email"
-              name="email"
-              value={student.email}
+              placeholder="username"
+              name="username"
+              value={student.username}
             ></input>
           </Grid>
           <Grid className="center-item" item xs={12}>

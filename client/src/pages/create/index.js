@@ -23,18 +23,35 @@ export default function Create() {
     event.preventDefault();
     const { first_name, email, password } = student;
     try {
-      let response = await axios.post("http://localhost:8000/api/student/", {
-        first_name,
+      let response = await axios.post("http://localhost:8000/auth/users/", {
+        username: first_name,
         email,
         password,
       });
-      if(response.status === 200){
+      if(response.status === 201){
+        console.log(response.data)
+        let createStudent = await axios.post("http://localhost:8000/api/student/", {
+          id: response.data.id,
+          first_name: response.data.username,
+          email: response.data.email,
+        });
+        if(response.status === 200){
           window.location.href = "/login"
-      }else{
-          alert("There was an issue with creating your account")
+        }
       }
+      
     } catch (err) {
-      console.log(err.message);
+      if(err.response.data.password){
+        alert("There was an issue with your password")
+      }else if(err.response.data.email){
+        alert("there was an issue with your email")
+      }else if(err.response.data.username){
+        alert('there was an issue with your username')
+      }else{
+        alert('Somethings wrong')
+      }
+     
+      
     }
   };
   return (
