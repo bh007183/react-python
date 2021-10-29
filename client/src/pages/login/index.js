@@ -28,7 +28,7 @@ export default function Create() {
       });
       localStorage.setItem("Access", response.data.access)
       localStorage.setItem("Refresh", response.data.refresh)
-      window.location.href = "/dashbord"
+      window.location.href = "/dashboard/me"
     } catch (err) {
       console.log(err.message);
     }

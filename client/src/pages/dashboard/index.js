@@ -11,7 +11,7 @@ export default function Dashboard() {
     // }, [])
     useEffect(async () => {
       try{
-        let createStudent = await axios.get("http://localhost:8000/api/student/", {
+        let createStudent = await axios.get("http://localhost:8000/api/student/me", {
           headers: {
             authorization: `Bearer ${localStorage.getItem("Access")}`
           }
@@ -26,7 +26,7 @@ export default function Dashboard() {
     }, [])
     return (
         <div>
-            
+            hi
         </div>
     )
 }
