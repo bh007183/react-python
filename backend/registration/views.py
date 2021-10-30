@@ -43,11 +43,11 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     @api_view(["GET", "POST"])  
     def me(request):
-        student = Student.objects.get(id=request.user.id)
+        student = Course.objects.select_related('student_id').get(id=1)
         
-        serializer = StudentSerializer(student)
+        serializer = CourseSerializer(student)
       
-        print(serializer)
+        print(serializer.data)
 
         return Response(serializer.data)
 
