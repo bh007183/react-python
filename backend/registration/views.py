@@ -4,6 +4,7 @@ from .models import Course
 from .models import Student
 from rest_framework.filters import SearchFilter
 from .serializers import *
+from django.db import connection
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -43,13 +44,12 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     @api_view(["GET", "POST"])  
     def me(request):
-        student = Course.objects.select_related('student_id').get(id=1)
-        
-        serializer = CourseSerializer(student)
-      
-        print(serializer.data)
+        cursor = connection.cursor()
+        cursor.execute('''SELECT * FROM registration_student JOIN registration_course ON registration_student.id =registration_course.student_id_id WHERE registration_student.id = 6''')
+        row = cursor.fetchall()
+        print(row)
 
-        return Response(serializer.data)
+        return Response("ok")
 
 
 
